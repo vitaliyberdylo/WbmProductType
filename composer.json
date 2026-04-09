@@ -1,0 +1,27 @@
+{
+    "name": "wbm/product-type",
+    "description": "Shopware 6 plugin that adds a dedicated product type model, admin UI, storefront filtering and Elasticsearch integration.",
+    "type": "shopware-platform-plugin",
+    "license": "MIT",
+    "version": "1.0.0",
+    "require": {
+        "shopware/core": ">=6.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "WbmProductType\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WbmProductType\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "WbmProductType\\WbmProductType",
+        "label": {
+            "en-GB": "WBM Product Type",
+            "de-DE": "WBM Produkttyp"
+        }
+    }
+}

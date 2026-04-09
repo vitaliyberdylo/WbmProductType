@@ -1,0 +1,22 @@
+{% block sw_product_detail_specifications_custom_fields %}
+    {% parent %}
+
+    <mt-card
+        v-if="wbmExtension"
+        position-identifier="sw-product-detail-specifications-wbm-product-type"
+        :title="$t('wbm-product-type.detail.cardTitle')"
+        :is-loading="isLoading"
+    >
+        <mt-number-field
+            :model-value="wbmExtension.apiProductId"
+            :label="$t('wbm-product-type.detail.apiProductId')"
+            :disabled="true"
+        />
+
+        <mt-text-field
+            :model-value="wbmExtension.productType"
+            :label="$t('wbm-product-type.detail.productType')"
+            @update:model-value="wbmExtension.productType = $event"
+        />
+    </mt-card>
+{% endblock %}

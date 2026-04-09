@@ -1,0 +1,17 @@
+{% sw_extends '@Storefront/storefront/component/listing/filter-panel.html.twig' %}
+
+{% block component_filter_panel_items %}
+    {{ parent() }}
+
+    {% block component_filter_panel_item_product_type %}
+        {% set productTypes = listing.aggregations.get('product_type') %}
+
+        {% if productTypes and productTypes.buckets is not empty %}
+            {% sw_include '@WbmProductType/storefront/component/product-type-filter.html.twig' with {
+                listing: listing,
+                sidebar: sidebar,
+                productTypes: productTypes
+            } %}
+        {% endif %}
+    {% endblock %}
+{% endblock %}

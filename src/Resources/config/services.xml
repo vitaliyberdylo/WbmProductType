@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services">
+    <services>
+        <service id="WbmProductType\Helper\ProductTypeFilterHelper" />
+
+        <service id="WbmProductType\Core\Content\ProductExtension\ProductExtensionDefinition">
+            <tag name="shopware.entity.definition" />
+        </service>
+
+        <service id="WbmProductType\Core\Content\Product\ProductExtension">
+            <tag name="shopware.entity.extension" />
+        </service>
+
+        <service id="WbmProductType\Subscriber\Storefront\ProductListingSubscriber">
+            <argument type="service" id="WbmProductType\Helper\ProductTypeFilterHelper" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="WbmProductType\Subscriber\Storefront\ProductSearchSubscriber">
+            <argument type="service" id="WbmProductType\Helper\ProductTypeFilterHelper" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="WbmProductType\Elasticsearch\ProductElasticsearchDefinitionDecorator"
+                 decorates="Shopware\Elasticsearch\Product\ElasticsearchProductDefinition">
+            <argument type="service" id="WbmProductType\Elasticsearch\ProductElasticsearchDefinitionDecorator.inner" />
+            <argument type="service" id="Doctrine\DBAL\Connection" />
+        </service>
+
+        <service id="WbmProductType\Elasticsearch\Admin\ProductAdminSearchIndexerDecorator"
+                 decorates="Shopware\Elasticsearch\Admin\Indexer\ProductAdminSearchIndexer">
+            <argument type="service" id="WbmProductType\Elasticsearch\Admin\ProductAdminSearchIndexerDecorator.inner" />
+            <argument type="service" id="Doctrine\DBAL\Connection" />
+        </service>
+    </services>
+</container>

@@ -1,0 +1,13 @@
+{
+  "wbm-product-type": {
+    "detail": {
+      "cardTitle": "Webmatch Produkttyp",
+      "apiProductId": "API Produkt-ID",
+      "productType": "Produkttyp"
+    },
+    "productList": {
+      "columnProductType": "Produkttyp",
+      "filterPlaceholder": "Produkttyp auswählen..."
+    }
+  }
+}
