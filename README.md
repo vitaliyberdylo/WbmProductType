@@ -7,7 +7,7 @@ Shopware 6 plugin that adds a dedicated **Product Type** field to products via a
 | Dependency      | Version  |
 |-----------------|----------|
 | Shopware 6      | >= 6.7   |
-| OpenSearch / ES | Recommended |
+| OpenSearch / ES | Required |
 
 ## Features
 
@@ -46,13 +46,15 @@ bin/console theme:compile
 bin/console cache:clear
 ```
 
-### Elasticsearch / OpenSearch (recommended)
+### Elasticsearch / OpenSearch (required)
 
-The plugin decorates storefront and admin ES indexers to index `productType`. Make sure ES/OpenSearch is enabled and rebuild the index:
+The plugin requires Elasticsearch/OpenSearch and decorates storefront and admin ES indexers to index `productType`. Make sure ES/OpenSearch is enabled and rebuild the index:
 
 ```bash
 bin/console es:index --no-queue
 ```
+
+**Note:** The plugin will not install without Elasticsearch/OpenSearch properly configured.
 
 ## Configuration
 

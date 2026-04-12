@@ -14,11 +14,13 @@
 
         <service id="WbmProductType\Subscriber\Storefront\ProductListingSubscriber">
             <argument type="service" id="WbmProductType\Helper\ProductTypeFilterHelper" />
+            <argument type="service" id="Shopware\Elasticsearch\Framework\ElasticsearchHelper" />
             <tag name="kernel.event_subscriber" />
         </service>
 
         <service id="WbmProductType\Subscriber\Storefront\ProductSearchSubscriber">
             <argument type="service" id="WbmProductType\Helper\ProductTypeFilterHelper" />
+            <argument type="service" id="Shopware\Elasticsearch\Framework\ElasticsearchHelper" />
             <tag name="kernel.event_subscriber" />
         </service>
 

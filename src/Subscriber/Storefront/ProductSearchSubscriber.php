@@ -12,6 +12,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Aggregation\Bucket\Terms
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Query\ScoreQuery;
+use Shopware\Elasticsearch\Framework\ElasticsearchHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use WbmProductType\Helper\ProductTypeFilterHelper;
 
@@ -19,8 +20,10 @@ class ProductSearchSubscriber implements EventSubscriberInterface
 {
     private const PRODUCT_TYPE_SEARCH_SCORE = 500;
 
-    public function __construct(private readonly ProductTypeFilterHelper $filterHelper)
-    {
+    public function __construct(
+        private readonly ProductTypeFilterHelper $filterHelper,
+        private readonly ElasticsearchHelper $elasticsearchHelper
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -33,6 +36,10 @@ class ProductSearchSubscriber implements EventSubscriberInterface
 
     public function onCriteria(ProductListingCriteriaEvent $event): void
     {
+        if (!$this->elasticsearchHelper->allowIndexing()) {
+            return;
+        }
+
         $criteria = $event->getCriteria();
         $request = $event->getRequest();
 

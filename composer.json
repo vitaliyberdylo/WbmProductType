@@ -5,7 +5,8 @@
     "license": "MIT",
     "version": "1.0.0",
     "require": {
-        "shopware/core": ">=6.7"
+        "shopware/core": ">=6.7",
+        "shopware/elasticsearch": "^6.7"
     },
     "autoload": {
         "psr-4": {

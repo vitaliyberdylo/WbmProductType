@@ -7,13 +7,16 @@ namespace WbmProductType\Subscriber\Storefront;
 use Shopware\Core\Content\Product\Events\ProductListingCriteriaEvent;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Aggregation\Bucket\TermsAggregation;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
+use Shopware\Elasticsearch\Framework\ElasticsearchHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use WbmProductType\Helper\ProductTypeFilterHelper;
 
 readonly class ProductListingSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly ProductTypeFilterHelper $filterHelper)
-    {
+    public function __construct(
+        private readonly ProductTypeFilterHelper $filterHelper,
+        private readonly ElasticsearchHelper $elasticsearchHelper
+    ) {
     }
     public static function getSubscribedEvents(): array
     {
@@ -24,6 +27,10 @@ readonly class ProductListingSubscriber implements EventSubscriberInterface
 
     public function onCriteria(ProductListingCriteriaEvent $event): void
     {
+        if (!$this->elasticsearchHelper->allowIndexing()) {
+            return;
+        }
+
         $criteria = $event->getCriteria();
 
         $criteria->addAssociation('wbmExtension');
