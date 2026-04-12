@@ -14,6 +14,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Aggregation\Bucket\Terms
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use Shopware\Elasticsearch\Framework\ElasticsearchHelper;
 use Symfony\Component\HttpFoundation\Request;
 use WbmProductType\Helper\ProductTypeFilterHelper;
 use WbmProductType\Subscriber\Storefront\ProductListingSubscriber;
@@ -23,12 +24,15 @@ use WbmProductType\Subscriber\Storefront\ProductListingSubscriber;
 class ProductListingSubscriberTest extends TestCase
 {
     private ProductTypeFilterHelper&MockObject $filterHelper;
+    private ElasticsearchHelper&MockObject $elasticsearchHelper;
     private ProductListingSubscriber $subscriber;
 
     protected function setUp(): void
     {
         $this->filterHelper = $this->createMock(ProductTypeFilterHelper::class);
-        $this->subscriber = new ProductListingSubscriber($this->filterHelper);
+        $this->elasticsearchHelper = $this->createMock(ElasticsearchHelper::class);
+        $this->elasticsearchHelper->method('allowIndexing')->willReturn(true);
+        $this->subscriber = new ProductListingSubscriber($this->filterHelper, $this->elasticsearchHelper);
     }
     public function testSubscribedEvents(): void
     {
@@ -157,6 +161,27 @@ class ProductListingSubscriberTest extends TestCase
         $filters = $event->getCriteria()->getFilters();
         static::assertCount(1, $filters);
         static::assertSame(['books', 'cds'], $filters[0]->getValue());
+    }
+
+    public function testElasticsearchDisabled(): void
+    {
+        $elasticsearchHelper = $this->createMock(ElasticsearchHelper::class);
+        $elasticsearchHelper->method('allowIndexing')->willReturn(false);
+        $subscriber = new ProductListingSubscriber($this->filterHelper, $elasticsearchHelper);
+
+        $event = $this->createEvent(['search' => 'books', 'productType' => 'cds']);
+
+        $this->filterHelper->expects(static::never())
+            ->method('parseFilterValues');
+
+        $subscriber->onCriteria($event);
+
+        $criteria = $event->getCriteria();
+
+        static::assertFalse($criteria->hasAssociation('wbmExtension'));
+        static::assertNull($criteria->getAggregation('product_type'));
+        static::assertEmpty($criteria->getFilters());
+        static::assertEmpty($criteria->getQueries());
     }
 
     /**
